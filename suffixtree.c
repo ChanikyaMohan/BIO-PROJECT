@@ -4,8 +4,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#define MAX_CHAR 256
-#define MAX_TEXTSIZE 1000
+#define MAX_CHAR 10000
+#define MAX_TEXTSIZE 10000
 #define MAX_PATTERNSIZE 100 
 
 int patternlength;
@@ -343,8 +343,9 @@ int doTraversalToCountLeaf(Node *n)
 	if(n->suffixIndex > -1)
 	{
 	    listarr[patterncount]=n->suffixIndex;
+	    printf("%d ",listarr[patterncount]);
 	    patterncount++;
-		printf("\nFound at position: %d", n->suffixIndex);
+		//printf("\nFound at position: %d", n->suffixIndex);
 		return 1;
 	}
 	int count = 0;
@@ -354,11 +355,13 @@ int doTraversalToCountLeaf(Node *n)
 		if(n->children[i] != NULL)
 		{
 			count += doTraversalToCountLeaf(n->children[i]);
+			//returns no. of leaf ndes under each node
 		}
 	}
 	return count;
 }
 
+//count ni. of leaf nodes under a node
 int countLeaf(Node *n)
 {
 	if(n == NULL)
@@ -415,55 +418,92 @@ void checkForSubString(char* str)
 }
 
 //* ------ merge sort ------*//
-void combine(int a[],int ,int ,int ,int );
-void mergesort(int a[],int i,int j)
+// Merges two subarrays of arr[].
+// First subarray is arr[l..m]
+// Second subarray is arr[m+1..r]
+void merge(int arr[], int , int , int);
+void mergeSort(int arr[], int , int);
+
+void merge(int arr[], int l, int m, int r)
 {
-    int mid;
-        
-    if(i<j)
+    int i, j, k;
+    int n1 = m - l + 1;
+    int n2 =  r - m;
+ 
+    /* create temp arrays */
+    int L[n1], R[n2];
+ 
+    /* Copy data to temp arrays L[] and R[] */
+    for (i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[m + 1+ j];
+ 
+    /* Merge the temp arrays back into arr[l..r]*/
+    i = 0; // Initial index of first subarray
+    j = 0; // Initial index of second subarray
+    k = l; // Initial index of merged subarray
+    while (i < n1 && j < n2)
     {
-        mid=(i+j)/2;
-        mergesort(a,i,mid);        //left recursion
-        mergesort(a,mid+1,j);    //right recursion
-        combine(a,i,mid,mid+1,j);    //merging of two sorted sub-arrays
+        if (L[i] <= R[j])
+        {
+            arr[k] = L[i];
+            i++;
+        }
+        else
+        {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+ 
+    /* Copy the remaining elements of L[], if there
+       are any */
+    while (i < n1)
+    {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+ 
+    /* Copy the remaining elements of R[], if there
+       are any */
+    while (j < n2)
+    {
+        arr[k] = R[j];
+        j++;
+        k++;
     }
 }
  
-void combine(int a[],int i1,int j1,int i2,int j2)
+/* l is for left index and r is right index of the
+   sub-array of arr to be sorted */
+void mergeSort(int arr[], int l, int r)
 {
-    int temp[50];    //array used for merging
-    int i,j,k;
-    i=i1;    //beginning of the first list
-    j=i2;    //beginning of the second list
-    k=0;
-    
-    while(i<=j1 && j<=j2)    //while elements in both lists
+    if (l < r)
     {
-        if(a[i]<a[j])
-            temp[k++]=a[i++];
-        else
-            temp[k++]=a[j++];
+        // Same as (l+r)/2, but avoids overflow for
+        // large l and h
+        int m = l+(r-l)/2;
+ 
+        // Sort first and second halves
+        mergeSort(arr, l, m);
+        mergeSort(arr, m+1, r);
+ 
+        merge(arr, l, m, r);
     }
-    
-    while(i<=j1)    //copy remaining elements of the first list
-        temp[k++]=a[i++];
-        
-    while(j<=j2)    //copy remaining elements of the second list
-        temp[k++]=a[j++];
-        
-    //Transfer elements from temp[] back to a[]
-    for(i=i1,j=0;i<=j2;i++,j++)
-        a[i]=temp[j];
 }
-
 
 void checkForTandemRepeats(){
 	int i,arr[patterncount];
 	int startprinted = 0;
 	for(i=0;i<patterncount;i++){
 		arr[i] = listarr[i];
+		//printf("%d ",listarr[i]);
 	}
-	mergesort(arr,0,patterncount-1);
+	
+	mergeSort(arr,0,patterncount-1);
 	printf("Positions at which pattern found in increasing order:\n");
 	for(i=0;i<patterncount;i++){
 		printf("%d ",arr[i]);
@@ -487,7 +527,7 @@ void checkForTandemRepeats(){
 int main(int argc, char *argv[])
 {
     
-	strcpy(text, "AABAAABAAAABACAAAABADAABAAABAAABAAABAA$");
+	strncpy(text,"BAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAABAAAABACAAAABADAABAAABAAABAAABAAAABAAABAAAABACAAAABADAABAAABAAABAAABAA$",1801);
 	clock_t begin = clock();
 	buildSuffixTree();
 	clock_t end = clock();
