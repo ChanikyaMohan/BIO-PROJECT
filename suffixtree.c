@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+
 #define MAX_CHAR 10000
 #define MAX_TEXTSIZE 10000
 #define MAX_PATTERNSIZE 100 
@@ -410,7 +411,6 @@ void checkForSubString(char* str)
 	int res = doTraversal(root, str, 0);
 	if(res == 1){
 		printf("\nPattern <%s> is a Substring\n", str); 
-		checkForTandemRepeats();
 	}
 	else{
 		printf("\nPattern <%s> is NOT a Substring\n", str);
@@ -531,9 +531,9 @@ int main(int argc, char *argv[])
 	clock_t begin = clock();
 	buildSuffixTree();
 	clock_t end = clock();
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    double time_spent_for_building = (double)(end - begin) / CLOCKS_PER_SEC;
 	
-	printf("\nText size %d : time take %f\n",strlen(text),time_spent);
+	printf("\nText size %d : time take %f\n",strlen(text),time_spent_for_building);
 	
 	strcpy(pattern,"AABA");
 	printf("\n\nText: %s, Pattern to search: %s",text,pattern);
@@ -541,8 +541,17 @@ int main(int argc, char *argv[])
 	begin = clock();
 	checkForSubString(pattern);
 	end = clock();
-    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("\nTime taken to search tandem repeats %f\n",time_spent);
+    double time_spent_for_searching = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    begin = clock();
+    checkForTandemRepeats();
+    end = clock();
+    double time_spent_for_tandemrepeats = (double)(end - begin) / CLOCKS_PER_SEC;
+
+
+    printf("\nText size: %d - time taken: %f\n",strlen(text),time_spent_for_building);
+    printf("\nSearching: %f\n",time_spent_for_searching);
+    printf("\ntandem repeats: %f\n",time_spent_for_tandemrepeats);
 	
 	
 	

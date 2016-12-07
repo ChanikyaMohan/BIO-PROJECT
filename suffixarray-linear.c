@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
+
 #define MAX_CHAR 10000
   
 struct SuffixTreeNode {
@@ -525,20 +527,43 @@ int main(int argc, char *argv[])
     int length = strlen(text);
     int patternlength = strlen(pattern);
     
-    buildSuffixTree();      
+    clock_t begin = clock();
+    buildSuffixTree();
+    clock_t end = clock();
+
+    double time_spent_for_buildingST = (double)(end - begin) / CLOCKS_PER_SEC;
+      
     size--;
     int *suffixArray =(int*) malloc(sizeof(int) * size);
+
+    begin = clock();
     buildSuffixArray(suffixArray);
+    end = clock();
+
+    double time_spent_for_buildingSA = (double)(end - begin) / CLOCKS_PER_SEC;
+
     //Free the dynamically allocated memory
     freeSuffixTreeByPostOrder(root);
     
+    begin = clock();
     search(pattern,text,suffixArray,length);
+    end = clock();
+
+    double time_spent_for_searching = (double)(end - begin) / CLOCKS_PER_SEC;
+
     int i;
     for(i=0;i<foundcount;i++){
         printf("%d\n",found[i]);
     }
+
+    begin = clock();
     checkForTandemRepeats(patternlength);
-    
+    end = clock();
+
+    double time_spent_for_tandemrepeats = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    printf("\nBuilding ST:%f - Building SA: %f - Searching: %f - TandemRepats - %f",time_spent_for_buildingST,time_spent_for_buildingSA,time_spent_for_searching,time_spent_for_tandemrepeats);
+
     free(suffixArray);
  
     return 0;

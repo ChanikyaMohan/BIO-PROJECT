@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 
 struct suffix
@@ -235,16 +236,35 @@ int main()
     
     int length = strlen(txt);
     int patternlength = strlen(pattern);
+
+    clock_t begin = clock();
     int *sa = constructSuffixArray(txt,  length);
+    clock_t end = clock();
+
+    double time_spent_for_building = (double)(end - begin) / CLOCKS_PER_SEC;
+
     printf("The generated suffix array indices for %s:\n", txt);
     printSuffixArray(sa, length);
 
+    begin = clock();
     search(pattern,txt,sa,length);
+    end = clock();
+
+    double time_spent_for_searching = (double)(end - begin) / CLOCKS_PER_SEC;
+
     int i;
     for(i=0;i<foundcount;i++){
         printf("%d\n",found[i]);
     }
+
+    begin = clock();
     checkForTandemRepeats(patternlength);
+    end = clock();
+
+    double time_spent_for_tandemrepeats = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    printf("\nBuilding: %f - Searching: %f - tandemRepeats: %f",time_spent_for_building,time_spent_for_searching,time_spent_for_tandemrepeats);
+
     return 0;
 }
 
