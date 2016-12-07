@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 
+#define MAX_CHAR 20000
 
 struct suffix
 {
@@ -68,7 +69,7 @@ void printSuffixArray(int a[], int length)
     }
 }
 
-int found[],foundcount=0;
+int found[MAX_CHAR],foundcount=0;
 // A suffix array based search function to search a given pattern
 // 'pat' in given text 'txt' using suffix array suffArr[]
 void search(char *pat, char *txt, int *suffArr, int n)
@@ -206,7 +207,7 @@ void checkForTandemRepeats(int patternlength){
     int startprinted = 0;
     for(i=0;i<foundcount;i++){
         arr[i] = found[i];
-        //printf("%d ",listarr[i]);
+        printf("%d ",arr[i]);
     }
     
     mergeSort(arr,0,foundcount-1);
@@ -264,6 +265,8 @@ int main()
     double time_spent_for_tandemrepeats = (double)(end - begin) / CLOCKS_PER_SEC;
 
     printf("\nBuilding: %f - Searching: %f - tandemRepeats: %f",time_spent_for_building,time_spent_for_searching,time_spent_for_tandemrepeats);
+
+     printf("\nTotal Time: %f",time_spent_for_building+time_spent_for_searching+time_spent_for_tandemrepeats);
 
     return 0;
 }

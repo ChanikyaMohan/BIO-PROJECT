@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAX_CHAR 10000
+#define MAX_CHAR 20000
   
 struct SuffixTreeNode {
     struct SuffixTreeNode *children[MAX_CHAR];
@@ -356,7 +356,7 @@ void buildSuffixArray(int suffixArray[])
     printf("\n");
 }
 
-int found[],foundcount=0;
+int found[MAX_CHAR],foundcount=0;
 // A suffix array based search function to search a given pattern
 // 'pat' in given text 'txt' using suffix array suffArr[]
 void search(char *pat, char *txt, int *suffArr, int n)
@@ -387,6 +387,7 @@ void search(char *pat, char *txt, int *suffArr, int n)
                     foundcount++;
                 }
             }
+            //printf("mid is :%d",mid);
             for(i=mid-1;i>=l;i--){
                 if(strncmp(pat, txt+suffArr[i], m)==0){
                     printf("Pattern found at index %d - mid value %d\n",  suffArr[i],i);
@@ -494,7 +495,7 @@ void checkForTandemRepeats(int patternlength){
     int startprinted = 0;
     for(i=0;i<foundcount;i++){
         arr[i] = found[i];
-        //printf("%d ",listarr[i]);
+        //printf("---%d ",arr[i]);
     }
     
     mergeSort(arr,0,foundcount-1);
@@ -521,8 +522,8 @@ void checkForTandemRepeats(int patternlength){
 // driver program to test above functions
 int main(int argc, char *argv[])
 {
-    strncpy(text, "nanabnananana$",14);
-    strncpy(pattern,"na",2);
+    strncpy(text, "aattatatatatatatatatatggggggtttttt$",35);
+    strncpy(pattern,"at",2);
     
     int length = strlen(text);
     int patternlength = strlen(pattern);

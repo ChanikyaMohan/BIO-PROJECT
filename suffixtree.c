@@ -552,6 +552,7 @@ int main(int argc, char *argv[])
     printf("\nText size: %d - time taken: %f\n",strlen(text),time_spent_for_building);
     printf("\nSearching: %f\n",time_spent_for_searching);
     printf("\ntandem repeats: %f\n",time_spent_for_tandemrepeats);
+    printf("\ntotal time: %f\n",time_spent_for_tandemrepeats+time_spent_for_searching+time_spent_for_building);
 	
 	
 	
